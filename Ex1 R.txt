@@ -1,0 +1,32 @@
+# import a dataset
+acs <- read.csv(url("http://stat511.cwick.co.nz/homeworks/acs_or.csv"))
+
+# access a particular column,
+acs$age_husband
+
+# access a certain value in the dataframe
+acs[1,3]
+
+# Run a query on your data 
+a &lt;- subset(acs , age_husband &gt; age_wife) 
+
+# statistical functions
+mean(acs$age_husband)
+median(acs$age_husband)
+quantile(acs$age_wife)
+var(acs$age_wife)
+sd(acs$age_wife)
+summary(acs)
+
+# create a scatter plot of a data set,
+plot(x = s$age_husband , y = s$age_wife, type = &#39;p&#39;)
+
+# draw a Histogram of a dataset,
+hist(acs$number_children)
+
+# create a new dataset with only one column
+counts &lt;- table(acs$bedrooms)
+
+# draw a barplot
+barplot(counts, main=&quot;Bedrooms Distribution&quot;,  xlab=&quot;Number of Bedrooms&quot;)
+

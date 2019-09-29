@@ -1,0 +1,100 @@
+#
+# How to connect a Mysql database to R Studio
+#
+# Step 1: create a MySQL database
+#
+# This database has to run on the MySQL server. You can do this in multiple ways
+#
+# The hard way:
+#
+# Create the database directly on the MySQL server:
+# Open MySQL Workbench
+# Choose: "Database" and then "Connect to Database"
+# Choose for "Stored Connection" your MySQL server. Something like: LocalInstance MySQL80
+# Press ok (leave the rest at the default values)
+# You are now on the MySQL server.
+#
+# Choose "File" an then "New Model", or <CRTL> N or use the "new model" icon. (all the same).
+# Choose a name for your database, something like "testdb"
+# Press "Apply"
+# Just leave it like that and press "Apply" 
+# Now for some SQL magic
+# Open a new SQL tab for executing queries. Icon most left on the screen.
+# Do something like this:
+#
+SHOW DATABASES;
+USE testdb;
+CREATE TABLE Persons (
+    PersonID int,
+    LastName varchar(255),
+    FirstName varchar(255),
+    Address varchar(255),
+    City varchar(255)
+);
+INSERT INTO Persons (PersonID, LastName, FirstName, Address, City)
+VALUES ('1', 'Bakker', 'Taco', 'Leeuwetand 18', 'Monnickendam');
+INSERT INTO Persons (PersonID, LastName, FirstName, Address, City)
+VALUES ('2', 'Bakker', 'Nick', 'Leeuwetand 18', 'Monnickendam');
+#
+# execute with the lightning bolt icon. Enjoy your new database!
+
+# The more easy way to create a MYSQL database:
+#
+# You can also create the schema (database) completely in MySQL Workbench
+# But understand that you then only create a local instance.
+# You have to sync it with the server.
+#
+# So in the MySQL Workbench create a new model
+# Choose "File" an then "New Model", or <CRTL> N or use the "new model" icon. (all the same).
+# Create the model, at least one table and some content.
+# ok ok I will explain this in more detail later.
+# But this should be easy.
+#
+# Now click in the menu on "Database" and then "Synchronize Model" or <CRTL><SHIFT>z 
+# Make sure the Stored Connection points to your MySQL server.
+# Click "Next" and follow the instructions.
+# Your local database is now on the server.
+#
+# Step 2:
+# Create a user that can actually connect from R Studio to MySQL.
+#
+# To do this the user needs a "STANDARD" encryption type.
+# Or you will get this error: Authentication plugin 'caching_sha2_password' cannot be loaded:
+#
+# In MySQL Workbench: open the connection to the MySQL Server.
+# Choose: "Database" and then "Connect to Database"
+# Choose for "Stored Connection" your MySQL server. Something like: LocalInstance MySQL80
+# Press ok (leave the rest at the default values)
+# You are now on the MySQL server.
+# (Or maybe you had this tab still open)
+#
+# On the left of your screen, under Management: Choose: "Users and Privileges"
+# you see a list of users.
+# Click on "Add Account"
+# Fill in the fields. It will nag you on a strong password, but "geheim" is also possible :-)
+# Make sure that "Authentication Type" is "Standard". Or it will probably not work.
+# Goto Adminitrative roles Tab and select the roles. DBA is most easy for testing. Press "Apply" 
+# Check the user list. Should be added.
+#
+# Ok you're all set, Step 3: let's go to R Studio
+#
+# First execute these commands to get the necessary libraries 
+
+install.packages("DBI")
+install.packages("RMySQL")
+library(DBI)
+library(RMySQL)
+
+# Now open the database named "testdb" and assign it to a dataframe called "conMySQL", with user "henk"
+
+conMySQL <- dbConnect(MySQL(), dbname="testdb", user="henk",password= "a1b2c3d4E5_!HdV", host="localhost")
+
+# And show the tables
+
+dbListTables(conMySQL)
+
+# And write some data back to the database in MySQL
+
+dbWriteTable(conMySQL,name="population", value=population , append=FALSE, row.names=FALSE, overwrite=FALSE)
+
+

@@ -1,0 +1,4 @@
+"treated1","treated2","treated3","control1","control2","control3"
+"geneA",1,1,10,20,5,3
+"geneB",2,2,10,22,5,3
+"geneC",1,3,11,24,5,3
